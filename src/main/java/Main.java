@@ -10,6 +10,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 import javax.sql.DataSource;
 import java.util.UUID;
 
+import static io.vertx.core.http.HttpMethod.GET;
 import static io.vertx.core.http.HttpMethod.POST;
 
 public class Main {
@@ -50,6 +51,10 @@ public class Main {
         router.route(POST, "/runs").handler(routingContext -> {
             var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
             routingContext.response().end(id.toString());
+        });
+        router.route(GET, "/runs").handler(routingContext -> {
+            var runs = jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
+            routingContext.response().end(runs.toString());
         });
         return router;
     }
