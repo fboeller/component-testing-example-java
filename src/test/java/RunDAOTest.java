@@ -1,8 +1,8 @@
-import liquibase.Liquibase;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import org.jdbi.v3.core.Jdbi;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -25,7 +25,7 @@ public class RunDAOTest {
     @BeforeAll
     public static void setupDatabase() throws Exception {
         var dataSource = createPostgresDataSource(container);
-        migrateDatabase(dataSource);
+        Main.migrateDatabase(dataSource);
         jdbi = Main.configureJdbi(Jdbi.create(dataSource));
     }
 
@@ -41,17 +41,6 @@ public class RunDAOTest {
         dataSource.setPassword(container.getPassword());
         dataSource.setURL(container.getJdbcUrl());
         return dataSource;
-    }
-
-    private static void migrateDatabase(DataSource dataSource) throws Exception {
-        try (var connection = dataSource.getConnection()) {
-            var migrator = new Liquibase(
-                    "migrations.xml",
-                    new ClassLoaderResourceAccessor(),
-                    new JdbcConnection(connection)
-            );
-            migrator.update("");
-        }
     }
 
     @Test
