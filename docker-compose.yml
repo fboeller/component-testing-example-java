@@ -6,3 +6,10 @@ services:
       - "4202:5432"
     environment:
       POSTGRES_PASSWORD: secret
+  external_service:
+    image: mockserver/mockserver:mockserver-5.9.0
+    ports:
+      - "4203:4203"
+    environment:
+      LOG_LEVEL: "DEBUG"
+      SERVER_PORT: 4203
