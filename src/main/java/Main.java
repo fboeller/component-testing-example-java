@@ -15,9 +15,11 @@ import static io.vertx.core.http.HttpMethod.POST;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        migrateDatabase(createPostgresDataSource());
+        var dataSource = createPostgresDataSource();
+        migrateDatabase(dataSource);
+        var jdbi = configureJdbi(Jdbi.create(dataSource));
         var vertx = Vertx.vertx();
-        var router = configureRouter(Router.router(vertx));
+        var router = configureRouter(Router.router(vertx), jdbi);
         vertx.createHttpServer()
                 .requestHandler(router)
                 .listen(4201);
@@ -44,10 +46,10 @@ public class Main {
         }
     }
 
-    private static Router configureRouter(Router router) {
-        router.route(POST, "/run").handler(routingContext -> {
-            var response = routingContext.response();
-            response.end("Hello world!");
+    private static Router configureRouter(Router router, Jdbi jdbi) {
+        router.route(POST, "/runs").handler(routingContext -> {
+            var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
+            routingContext.response().end(id.toString());
         });
         return router;
     }
