@@ -25,8 +25,8 @@ public class RunDAOTest {
     @BeforeAll
     public static void setupDatabase() throws Exception {
         var dataSource = createPostgresDataSource(container);
-        Main.migrateDatabase(dataSource);
-        jdbi = Main.configureJdbi(Jdbi.create(dataSource));
+        Database.migrateDatabase(dataSource);
+        jdbi = Database.configureJdbi(Jdbi.create(dataSource));
     }
 
     @AfterEach
