@@ -7,9 +7,9 @@ import java.util.UUID;
 
 public interface RunDAO {
 
-    @SqlUpdate("INSERT INTO run (name, status) VALUES (?, 'RUNNING')")
+    @SqlUpdate("INSERT INTO run (status) VALUES ('RUNNING')")
     @GetGeneratedKeys
-    UUID createRun(String name);
+    UUID createRun();
 
     @SqlQuery("SELECT * FROM run")
     List<Run> selectRuns();

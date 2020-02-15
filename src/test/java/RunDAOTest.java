@@ -66,9 +66,9 @@ public class RunDAOTest {
     @DisplayName("A single run is selected when it is inserted")
     void t2() {
         jdbi.useExtension(RunDAO.class, dao -> {
-            var id = dao.createRun("myrun");
+            var id = dao.createRun();
             assertThat(dao.selectRuns())
-                    .containsExactly(new Run(id, "myrun", "RUNNING"));
+                    .containsExactly(new Run(id, "RUNNING"));
         });
     }
 }

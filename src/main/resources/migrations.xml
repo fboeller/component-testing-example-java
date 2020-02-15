@@ -16,7 +16,6 @@
         <sql>
             CREATE TABLE run (
               id uuid not null primary key default uuid_generate_v4(),
-              name text not null,
               status text not null
             )
         </sql>
