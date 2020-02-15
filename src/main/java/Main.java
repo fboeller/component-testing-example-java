@@ -9,14 +9,20 @@ import static io.vertx.core.http.HttpMethod.POST;
 
 public class Main {
 
+    private static final int APP_PORT = 4201;
+    private static final int DB_PORT = 4202;
+    private static final int EXTERNAL_SERVICE_PORT = 4203;
+
     public static void main(String[] args) throws Exception {
         var vertx = Vertx.vertx();
-        var jdbi = Database.initDatabase();
-        var runService = new RunService(HttpUrl.parse("http://localhost:4203"), new OkHttpClient());
+        var jdbi = Database.initDatabase("localhost", DB_PORT);
+        var externalServiceUrl = new HttpUrl.Builder()
+                .scheme("http").host("localhost").port(EXTERNAL_SERVICE_PORT).build();
+        var runService = new RunService(externalServiceUrl, new OkHttpClient());
         var router = configureRouter(Router.router(vertx), jdbi, runService);
         vertx.createHttpServer()
                 .requestHandler(router)
-                .listen(4201);
+                .listen(APP_PORT);
     }
 
     private static Router configureRouter(Router router, Jdbi jdbi, RunService runService) {

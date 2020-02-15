@@ -10,19 +10,18 @@ import java.util.UUID;
 
 public class Database {
 
-    public static Jdbi initDatabase() throws Exception {
-        var dataSource = createPostgresDataSource();
+    public static Jdbi initDatabase(String host, int port) throws Exception {
+        var dataSource = createPostgresDataSource(host, port);
         migrateDatabase(dataSource);
         return configureJdbi(Jdbi.create(dataSource));
     }
 
-    private static DataSource createPostgresDataSource() {
+    private static DataSource createPostgresDataSource(String host, int port) {
         var dataSource = new PGSimpleDataSource();
         dataSource.setDatabaseName("postgres");
         dataSource.setUser("postgres");
         dataSource.setPassword("secret");
-        // TODO Will this work on MacOS?
-        dataSource.setURL("jdbc:postgresql://localhost:4202/postgres");
+        dataSource.setURL("jdbc:postgresql://" + host + ":" + port + "/postgres");
         return dataSource;
     }
 
