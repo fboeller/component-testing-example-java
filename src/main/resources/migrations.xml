@@ -22,13 +22,4 @@
         </sql>
     </changeSet>
 
-    <changeSet id="003" author="fab">
-        <sql>
-            CREATE TABLE warning (
-              run_id uuid not null references run(id) on delete cascade,
-              message text not null
-            )
-        </sql>
-    </changeSet>
-
 </databaseChangeLog>

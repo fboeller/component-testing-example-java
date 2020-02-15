@@ -16,10 +16,6 @@ public class Main {
                 rs.getString("name"),
                 rs.getString("status")
         ));
-        jdbi.registerRowMapper(Warning.class, (rs, ctx) -> new Warning(
-                rs.getObject("run_id", UUID.class),
-                rs.getString("message")
-        ));
         return jdbi;
     }
 }
