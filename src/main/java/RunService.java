@@ -14,16 +14,18 @@ public class RunService {
         this.baseUrl = baseUrl;
     }
 
-    public void executeRun() {
-        try {
-            var request = new Request.Builder()
-                    .post(RequestBody.create("{}", JSON))
-                    .url(baseUrl.resolve("item"))
-                    .build();
-            client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // TODO Handle
+    public void executeRun(int itemCount) {
+        for (int i=0; i < itemCount; i++) {
+            try {
+                var request = new Request.Builder()
+                        .post(RequestBody.create("{}", JSON))
+                        .url(baseUrl.resolve("item"))
+                        .build();
+                client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // TODO Handle
+            }
         }
     }
 

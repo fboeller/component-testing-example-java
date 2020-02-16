@@ -27,8 +27,9 @@ public class Main {
 
     private static Router configureRouter(Router router, Jdbi jdbi, RunService runService) {
         router.route(POST, "/runs").handler(routingContext -> {
+            var itemCount = Integer.parseInt(routingContext.request().getParam("item_count"));
             var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
-            runService.executeRun();
+            runService.executeRun(itemCount);
             routingContext.response().end(id.toString());
         });
         router.route(GET, "/runs").handler(routingContext -> {

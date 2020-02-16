@@ -1,13 +1,8 @@
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClientOptions;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.mockserver.client.proxy.Times;
 import org.mockserver.client.server.MockServerClient;
-import org.mockserver.model.HttpRequest;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -21,7 +16,7 @@ public class RunServiceTest {
     public static MockServerContainer mockServer = new MockServerContainer();
 
     private static RunService runService;
-    private MockServerClient mockServerClient;
+    private static MockServerClient mockServerClient;
 
     @BeforeAll
     public static void beforeAll() {
@@ -33,18 +28,26 @@ public class RunServiceTest {
                         .build(),
                 new OkHttpClient()
         );
+        mockServerClient = new MockServerClient(mockServer.getContainerIpAddress(), mockServer.getServerPort());
     }
 
-    @BeforeEach
-    public void beforeEach() {
-        mockServerClient = new MockServerClient(mockServer.getContainerIpAddress(), mockServer.getServerPort());
+    @AfterEach
+    public void afterEach() {
+        mockServerClient.reset();
     }
 
     @Test
     @DisplayName("A run results in a successful request")
     public void t1() {
-        runService.executeRun();
-        mockServerClient.verify(request().withMethod("POST").withPath("/item"));
+        runService.executeRun(1);
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), Times.once());
+    }
+
+    @Test
+    @DisplayName("Multiple runs result successful requests")
+    public void t2() {
+        runService.executeRun(5);
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), Times.exactly(5));
     }
 
 }
