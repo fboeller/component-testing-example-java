@@ -11,7 +11,7 @@ services:
     ports:
       - "4203:4203"
     environment:
-      LOG_LEVEL: "DEBUG"
+      LOG_LEVEL: "INFO"
       SERVER_PORT: 4203
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/init.json
     volumes:
