@@ -33,13 +33,12 @@ public class Main {
             var itemCount = Integer.parseInt(routingContext.request().getParam("item_count"));
             var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
             var isSuccess = runService.executeRun(itemCount);
-            routingContext.response().end(
-                    new JsonObject().put("id", id.toString()).put("success", isSuccess).toString()
-            );
+            var run = jdbi.withExtension(RunDAO.class, dao -> dao.changeStatus(id, isSuccess ? "SUCCESS" : "FAILED"));
+            routingContext.response().end(JsonObject.mapFrom(run).encodePrettily());
         });
         router.route(GET, "/runs").handler(routingContext -> {
             var runs = jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
-            routingContext.response().end(new JsonArray(runs).toString());
+            routingContext.response().end(new JsonArray(runs).encodePrettily());
         });
         return router;
     }
