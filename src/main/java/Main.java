@@ -1,4 +1,6 @@
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -26,15 +28,18 @@ public class Main {
     }
 
     private static Router configureRouter(Router router, Jdbi jdbi, RunService runService) {
+        router.route().failureHandler(routingContext -> routingContext.failure().printStackTrace());
         router.route(POST, "/runs").handler(routingContext -> {
             var itemCount = Integer.parseInt(routingContext.request().getParam("item_count"));
             var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
-            runService.executeRun(itemCount);
-            routingContext.response().end(id.toString());
+            var isSuccess = runService.executeRun(itemCount);
+            routingContext.response().end(
+                    new JsonObject().put("id", id.toString()).put("success", isSuccess).toString()
+            );
         });
         router.route(GET, "/runs").handler(routingContext -> {
             var runs = jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
-            routingContext.response().end(runs.toString());
+            routingContext.response().end(new JsonArray(runs).toString());
         });
         return router;
     }
