@@ -128,8 +128,8 @@
 
         <dependency>
             <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-client</artifactId>
-            <version>3.2</version>
+            <artifactId>mockserver-client-java</artifactId>
+            <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
 

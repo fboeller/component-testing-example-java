@@ -1,14 +1,24 @@
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import org.junit.jupiter.api.*;
-import org.mockserver.client.proxy.Times;
-import org.mockserver.client.server.MockServerClient;
-import org.mockserver.model.HttpResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.matchers.Times;
+import org.mockserver.model.ConnectionOptions;
+import org.mockserver.model.Delay;
+import org.mockserver.model.HttpError;
+import org.mockserver.verify.VerificationTimes;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockserver.model.ConnectionOptions.connectionOptions;
+import static org.mockserver.model.HttpError.error;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -16,7 +26,7 @@ import static org.mockserver.model.HttpResponse.response;
 public class RunServiceTest {
 
     @Container
-    public static MockServerContainer mockServer = new MockServerContainer();
+    public static MockServerContainer mockServer = new MockServerContainer("5.9.0");
 
     private static RunService runService;
     private static MockServerClient mockServerClient;
@@ -45,7 +55,7 @@ public class RunServiceTest {
         mockServerClient.when(request()).respond(response().withStatusCode(200));
         var isSuccess = runService.executeRun(1);
         assertThat(isSuccess).isTrue();
-        mockServerClient.verify(request().withMethod("POST").withPath("/item"), Times.once());
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), VerificationTimes.once());
     }
 
     @Test
@@ -54,7 +64,7 @@ public class RunServiceTest {
         mockServerClient.when(request()).respond(response().withStatusCode(200));
         var isSuccess = runService.executeRun(5);
         assertThat(isSuccess).isTrue();
-        mockServerClient.verify(request().withMethod("POST").withPath("/item"), Times.exactly(5));
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), VerificationTimes.exactly(5));
     }
 
     @Test
@@ -62,6 +72,14 @@ public class RunServiceTest {
     public void t3() {
         mockServerClient.when(request()).respond(response().withStatusCode(500));
         var isSuccess = runService.executeRun(1);
+        assertThat(isSuccess).isFalse();
+    }
+
+    @Test
+    @DisplayName("A run fails on a connection error")
+    public void t4() {
+        mockServerClient.when(request()).error(error());
+        var isSuccess = runService.executeRun(2);
         assertThat(isSuccess).isFalse();
     }
 
