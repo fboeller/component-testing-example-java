@@ -18,29 +18,21 @@ public class RunDAOTest {
 
     @Container
     private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5")
+            .withDatabaseName("postgres")
+            .withUsername("postgres")
+            .withPassword("secret")
             .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"));
 
     private static Jdbi jdbi;
 
     @BeforeAll
     public static void setupDatabase() throws Exception {
-        var dataSource = createPostgresDataSource(container);
-        Database.migrateDatabase(dataSource);
-        jdbi = Database.configureJdbi(Jdbi.create(dataSource));
+        jdbi = Database.initDatabase(container.getJdbcUrl());
     }
 
     @AfterEach
     public void cleanDatabase() {
         jdbi.useHandle(handle -> handle.execute("DELETE FROM run"));
-    }
-
-    private static DataSource createPostgresDataSource(PostgreSQLContainer container) {
-        var dataSource = new PGSimpleDataSource();
-        dataSource.setDatabaseName(container.getDatabaseName());
-        dataSource.setUser(container.getUsername());
-        dataSource.setPassword(container.getPassword());
-        dataSource.setURL(container.getJdbcUrl());
-        return dataSource;
     }
 
     @Test

@@ -10,18 +10,18 @@ import java.util.UUID;
 
 public class Database {
 
-    public static Jdbi initDatabase(String host, int port) throws Exception {
-        var dataSource = createPostgresDataSource(host, port);
+    public static Jdbi initDatabase(String jdbcUrl) throws Exception {
+        var dataSource = createPostgresDataSource(jdbcUrl);
         migrateDatabase(dataSource);
         return configureJdbi(Jdbi.create(dataSource));
     }
 
-    private static DataSource createPostgresDataSource(String host, int port) {
+    private static DataSource createPostgresDataSource(String jdbcUrl) {
         var dataSource = new PGSimpleDataSource();
         dataSource.setDatabaseName("postgres");
         dataSource.setUser("postgres");
         dataSource.setPassword("secret");
-        dataSource.setURL("jdbc:postgresql://" + host + ":" + port + "/postgres");
+        dataSource.setURL(jdbcUrl);
         return dataSource;
     }
 

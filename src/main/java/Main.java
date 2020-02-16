@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         var vertx = Vertx.vertx();
-        var jdbi = Database.initDatabase("localhost", DB_PORT);
+        var jdbi = Database.initDatabase("jdbc:postgresql://localhost:" + DB_PORT + "/postgres");
         var externalServiceUrl = new HttpUrl.Builder()
                 .scheme("http").host("localhost").port(EXTERNAL_SERVICE_PORT).build();
         var runService = new RunService(externalServiceUrl, new OkHttpClient());
