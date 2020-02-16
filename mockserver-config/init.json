@@ -1,0 +1,11 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/item"
+    },
+    "httpResponse": {
+      "body": "Item created"
+    }
+  }
+]
