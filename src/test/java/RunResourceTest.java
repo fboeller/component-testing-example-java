@@ -11,7 +11,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(PostgresTestcontainerExtension.class)
 public class RunResourceTest {
 
     @RegisterExtension
