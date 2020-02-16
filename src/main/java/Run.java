@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,10 +13,12 @@ public class Run {
         this.status = status;
     }
 
+    @JsonProperty("id")
     public UUID getId() {
         return id;
     }
 
+    @JsonProperty("status")
     public String getStatus() {
         return status;
     }

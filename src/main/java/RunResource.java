@@ -1,12 +1,11 @@
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import org.jdbi.v3.core.Jdbi;
 
-import static io.vertx.core.http.HttpMethod.GET;
-import static io.vertx.core.http.HttpMethod.POST;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
+@Path("/runs")
+@Produces(MediaType.APPLICATION_JSON)
 public class RunResource {
 
     private final Jdbi jdbi;
@@ -17,24 +16,16 @@ public class RunResource {
         this.runService = runService;
     }
 
-    public Router configureRouter(Router router) {
-        router.route().failureHandler(routingContext -> routingContext.failure().printStackTrace());
-        router.route(POST, "/runs").handler(this::postRun);
-        router.route(GET, "/runs").handler(this::getRuns);
-        return router;
-    }
-
-    public void postRun(RoutingContext routingContext) {
-        var itemCount = Integer.parseInt(routingContext.request().getParam("item_count"));
+    @POST
+    public Run postRun(@QueryParam("item_count") int itemCount) {
         var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
         var isSuccess = runService.executeRun(itemCount);
-        var run = jdbi.withExtension(RunDAO.class, dao -> dao.changeStatus(id, isSuccess ? "SUCCESS" : "FAILED"));
-        routingContext.response().end(JsonObject.mapFrom(run).encodePrettily());
+        return jdbi.withExtension(RunDAO.class, dao -> dao.changeStatus(id, isSuccess ? "SUCCESS" : "FAILED"));
     }
 
-    public void getRuns(RoutingContext routingContext) {
-        var runs = jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
-        routingContext.response().end(new JsonArray(runs).encodePrettily());
+    @GET
+    public List<Run> getRuns() {
+        return jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
     }
 
 }
