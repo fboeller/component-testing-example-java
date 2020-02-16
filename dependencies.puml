@@ -1,0 +1,28 @@
+@startuml
+
+!define SPRITESURL https://raw.githubusercontent.com/rabelenda/cicon-plantuml-sprites/v1.0/sprites
+!includeurl SPRITESURL/java.puml
+!includeurl SPRITESURL/postgresql.puml
+
+scale 600 width
+skinparam {
+  nodesep 100
+  padding 5
+  monochrome true
+}
+
+title External Dependencies
+
+package Service {
+  component "<$java>\nApp" as App
+  database "<$postgresql>\nPostgreSQL" as PostgreSQL
+  App -d-> PostgreSQL
+}
+
+actor Client
+component ExternalService
+
+Client -r-> App
+App -r-> ExternalService
+
+@enduml
