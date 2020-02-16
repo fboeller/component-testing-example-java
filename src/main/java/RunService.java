@@ -14,19 +14,21 @@ public class RunService {
         this.baseUrl = baseUrl;
     }
 
-    public void executeRun(int itemCount) {
+    public boolean executeRun(int itemCount) {
+        var allCallsSuccessful = true;
         for (int i=0; i < itemCount; i++) {
             try {
                 var request = new Request.Builder()
                         .post(RequestBody.create("{}", JSON))
                         .url(baseUrl.resolve("item"))
                         .build();
-                client.newCall(request).execute();
+                var response = client.newCall(request).execute();
+                allCallsSuccessful = allCallsSuccessful && response.isSuccessful();
             } catch (IOException e) {
-                e.printStackTrace();
-                // TODO Handle
+                return false;
             }
         }
+        return allCallsSuccessful;
     }
 
 }
