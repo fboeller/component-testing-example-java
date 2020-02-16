@@ -9,6 +9,7 @@ import org.mockserver.verify.VerificationTimes;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import retrofit2.Retrofit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpError.error;
@@ -26,14 +27,13 @@ public class RunServiceTest {
 
     @BeforeAll
     public static void beforeAll() {
-        runService = new RunService(
-                new HttpUrl.Builder()
-                        .scheme("http")
-                        .host(mockServer.getContainerIpAddress())
-                        .port(mockServer.getServerPort())
-                        .build(),
-                new OkHttpClient()
-        );
+        var externalServiceUrl = new HttpUrl.Builder()
+                .scheme("http")
+                .host(mockServer.getContainerIpAddress())
+                .port(mockServer.getServerPort())
+                .build();
+        var retrofit = new Retrofit.Builder().baseUrl(externalServiceUrl).build();
+        runService = new RunService(retrofit.create(ExternalService.class));
         mockServerClient = new MockServerClient(mockServer.getContainerIpAddress(), mockServer.getServerPort());
     }
 

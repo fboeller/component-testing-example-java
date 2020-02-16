@@ -3,7 +3,7 @@ import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 public class App extends Application<App.AppConfiguration> {
 
@@ -20,7 +20,11 @@ public class App extends Application<App.AppConfiguration> {
     @Override
     public void run(AppConfiguration configuration, Environment environment) throws Exception {
         var jdbi = Database.initDatabase(databaseUrl);
-        var runService = new RunService(externalServiceUrl, new OkHttpClient());
+        var retrofit = new Retrofit.Builder()
+                .baseUrl(externalServiceUrl)
+                .build();
+        var externalService = retrofit.create(ExternalService.class);
+        var runService = new RunService(externalService);
         var runResource = new RunResource(jdbi, runService);
         environment.jersey().register(runResource);
         environment.healthChecks().register("dummy", new HealthCheck() {
