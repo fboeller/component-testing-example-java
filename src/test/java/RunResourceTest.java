@@ -1,11 +1,8 @@
-import org.jdbi.v3.core.Jdbi;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.Collections;
 
@@ -14,29 +11,19 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@Testcontainers
+@ExtendWith(PostgresTestcontainerExtension.class)
 public class RunResourceTest {
 
-    @Container
-    private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5")
-            .withDatabaseName("postgres")
-            .withUsername("postgres")
-            .withPassword("secret");
+    @RegisterExtension
+    public static PostgresTestcontainerExtension db = new PostgresTestcontainerExtension();
 
-    private static Jdbi jdbi;
     private static RunResource runResource;
 
     @BeforeAll
-    public static void setupDatabase() throws Exception {
-        jdbi = Database.initDatabase(container.getJdbcUrl());
+    public static void setupDatabase() {
         var runService = mock(RunService.class);
         when(runService.executeRun(anyInt())).thenReturn(true);
-        runResource = new RunResource(jdbi, runService);
-    }
-
-    @AfterEach
-    public void cleanDatabase() {
-        jdbi.useHandle(handle -> handle.execute("DELETE FROM run"));
+        runResource = new RunResource(db.getJdbi(), runService);
     }
 
     @Test
