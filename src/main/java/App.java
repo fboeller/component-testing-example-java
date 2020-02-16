@@ -1,18 +1,17 @@
 import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.Application;
+import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 
-public class App extends Application<AppConfiguration> {
+public class App extends Application<App.AppConfiguration> {
 
-    private static final int DB_PORT = 4202;
-    private static final int EXTERNAL_SERVICE_PORT = 4203;
+    public static class AppConfiguration extends Configuration {
+    }
 
-    private static final HttpUrl externalServiceUrl = new HttpUrl.Builder()
-            .scheme("http").host("localhost").port(EXTERNAL_SERVICE_PORT)
-            .build();
-    private static final String databaseUrl = "jdbc:postgresql://localhost:" + DB_PORT + "/postgres";
+    private static final HttpUrl externalServiceUrl = HttpUrl.parse("http://localhost:4203");
+    private static final String databaseUrl = "jdbc:postgresql://localhost:4202/postgres";
 
     public static void main(String[] args) throws Exception {
         new App().run("server", "config.yml");
@@ -24,10 +23,6 @@ public class App extends Application<AppConfiguration> {
         var runService = new RunService(externalServiceUrl, new OkHttpClient());
         var runResource = new RunResource(jdbi, runService);
         environment.jersey().register(runResource);
-        registerHealthChecks(environment);
-    }
-
-    private static void registerHealthChecks(Environment environment) {
         environment.healthChecks().register("dummy", new HealthCheck() {
             @Override
             protected Result check() {
