@@ -2,10 +2,7 @@ import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import javax.sql.DataSource;
 
 public class PostgresTestcontainerExtension implements BeforeAllCallback, AfterEachCallback {
 

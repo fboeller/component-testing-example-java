@@ -7,8 +7,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
@@ -18,8 +16,7 @@ public class RunDAOTest {
     private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5")
             .withDatabaseName("postgres")
             .withUsername("postgres")
-            .withPassword("secret")
-            .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"));
+            .withPassword("secret");
 
     private static Jdbi jdbi;
 
