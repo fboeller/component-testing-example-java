@@ -15,11 +15,14 @@ public class Main {
     private static final int DB_PORT = 4202;
     private static final int EXTERNAL_SERVICE_PORT = 4203;
 
+    private static final HttpUrl externalServiceUrl = new HttpUrl.Builder()
+            .scheme("http").host("localhost").port(EXTERNAL_SERVICE_PORT)
+            .build();
+    private static final String databaseUrl = "jdbc:postgresql://localhost:" + DB_PORT + "/postgres";
+
     public static void main(String[] args) throws Exception {
         var vertx = Vertx.vertx();
-        var jdbi = Database.initDatabase("jdbc:postgresql://localhost:" + DB_PORT + "/postgres");
-        var externalServiceUrl = new HttpUrl.Builder()
-                .scheme("http").host("localhost").port(EXTERNAL_SERVICE_PORT).build();
+        var jdbi = Database.initDatabase(databaseUrl);
         var runService = new RunService(externalServiceUrl, new OkHttpClient());
         var router = configureRouter(Router.router(vertx), jdbi, runService);
         vertx.createHttpServer()
