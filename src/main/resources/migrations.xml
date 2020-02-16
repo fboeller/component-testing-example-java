@@ -5,14 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="001" author="fab">
+    <changeSet id="001" author="fboeller">
         <sql>
             <comment>Allow usage of uuid column type</comment>
             CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
         </sql>
     </changeSet>
 
-    <changeSet id="002" author="fab">
+    <changeSet id="002" author="fboeller">
         <sql>
             CREATE TABLE run (
               id uuid not null primary key default uuid_generate_v4(),
