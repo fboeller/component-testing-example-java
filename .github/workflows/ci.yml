@@ -22,11 +22,12 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Docker Image Cache
         uses: actions/cache@v1
+        id: docker-cache
         with:
           path: docker-cache
           key: ${{ runner.os }}-docker
       - name: Cache docker layers
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.docker-cache.outputs.cache-hit != 'true'
         run: |
           mkdir docker-cache
           docker pull postgres:11.5
