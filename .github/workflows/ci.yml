@@ -20,7 +20,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Testcontainers Docker Cache
+      - name: Docker Image Cache
         uses: actions/cache@v1
         with:
           path: docker-cache
