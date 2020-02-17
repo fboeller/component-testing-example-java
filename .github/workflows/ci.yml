@@ -29,7 +29,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           mkdir docker-cache
+          docker pull postgres:11.5
           docker save postgres:11.5 > docker-cache/postgres.tar
+          docker pull jamesdbloom/mockserver:mockserver-5.9.0
           docker save jamesdbloom/mockserver:mockserver-5.9.0 > docker-cache/mockserver.tar
       - name: Load cached docker layers
         run: |
