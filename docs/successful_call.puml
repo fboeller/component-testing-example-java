@@ -1,0 +1,29 @@
+@startuml
+
+scale 800 width
+skinparam {
+  padding 5
+  monochrome true
+  ParticipantPadding 30
+}
+autoactivate on
+
+title Example of Successful Call
+
+actor Client
+participant App
+participant ExternalService
+database Database
+
+Client -> App: POST /runs?item_count=2
+App -> Database: INSERT INTO run
+return {id: 1}
+App -> ExternalService: POST /item
+return 200 OK
+App -> ExternalService: POST /item
+return 200 OK
+App -> Database: UPDATE run SET status = "SUCCESS"
+return
+return 200 OK: {id: 1, status: SUCCESS}
+
+@enduml
