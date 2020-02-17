@@ -19,7 +19,7 @@ public class RunResourceTest {
     private static RunResource runResource;
 
     @BeforeAll
-    public static void setupDatabase() {
+    public static void beforeAll() {
         var runService = mock(RunService.class);
         when(runService.executeRun(anyInt())).thenReturn(true);
         runResource = new RunResource(db.getJdbi(), runService);
