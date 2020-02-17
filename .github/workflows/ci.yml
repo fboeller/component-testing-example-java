@@ -13,12 +13,27 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Set up cache
+      - name: Maven Dependency Cache
         uses: actions/cache@v1
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+      - name: Testcontainers Docker Cache
+        uses: actions/cache@v1
+        with:
+          path: docker-cache
+          key: ${{ runner.os }}-docker
+      - name: Cache docker layers
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir docker-cache
+          docker save postgres:11.5 > postgres.tar
+          docker save jamesdbloom/mockserver:mockserver-5.9.0 > mockserver.tar
+      - name: Load cached docker layers
+        run: |
+          docker load < docker-cache/postgres.tar
+          docker load < docker-cache/mockserver.tar
       - name: Build with Maven
         run: mvn -B package --file pom.xml
