@@ -29,7 +29,7 @@ public class RunResourceTest {
     @DisplayName("Empty list is returned when asked for runs without having existing runs")
     public void t1() {
         assertThat(runResource.getRuns())
-                .isEqualTo(Collections.emptyList());
+                .isEmpty();
     }
 
     @Test
