@@ -20,23 +20,5 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Docker Image Cache
-        uses: actions/cache@v1
-        id: docker-cache
-        with:
-          path: docker-cache
-          key: ${{ runner.os }}-docker
-      - name: Cache docker layers
-        if: steps.docker-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir docker-cache
-          docker pull postgres:11.5
-          docker save postgres:11.5 > docker-cache/postgres.tar
-          docker pull jamesdbloom/mockserver:mockserver-5.9.0
-          docker save jamesdbloom/mockserver:mockserver-5.9.0 > docker-cache/mockserver.tar
-      - name: Load cached docker layers
-        run: |
-          docker load < docker-cache/postgres.tar
-          docker load < docker-cache/mockserver.tar
       - name: Build with Maven
         run: mvn -B package --file pom.xml
