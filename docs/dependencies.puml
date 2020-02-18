@@ -13,11 +13,9 @@ skinparam {
 
 title External Dependencies
 
-package Service {
-  component "<$java>\nRunService" as RunService
-  database "<$postgresql>\nPostgreSQL" as PostgreSQL
-  RunService -d-> PostgreSQL
-}
+component "<$java>\nRunService" as RunService
+database "<$postgresql>\nPostgreSQL" as PostgreSQL
+RunService -d-> PostgreSQL
 
 actor Client
 component ExternalService
