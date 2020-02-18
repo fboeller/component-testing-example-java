@@ -14,6 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpError.error;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
+import static org.mockserver.verify.VerificationTimes.exactly;
+import static org.mockserver.verify.VerificationTimes.once;
 
 @Testcontainers
 public class RunServiceTest {
@@ -47,7 +49,7 @@ public class RunServiceTest {
         mockServerClient.when(request()).respond(response().withStatusCode(200));
         var isSuccess = runService.executeRun(1);
         assertThat(isSuccess).isTrue();
-        mockServerClient.verify(request().withMethod("POST").withPath("/item"), VerificationTimes.once());
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), once());
     }
 
     @Test
@@ -56,7 +58,7 @@ public class RunServiceTest {
         mockServerClient.when(request()).respond(response().withStatusCode(200));
         var isSuccess = runService.executeRun(5);
         assertThat(isSuccess).isTrue();
-        mockServerClient.verify(request().withMethod("POST").withPath("/item"), VerificationTimes.exactly(5));
+        mockServerClient.verify(request().withMethod("POST").withPath("/item"), exactly(5));
     }
 
     @Test
