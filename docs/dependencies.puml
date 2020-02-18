@@ -18,8 +18,8 @@ component "<$java>\nRunService" as RunService
 database "<$postgresql>\nPostgreSQL" as PostgreSQL
 component ExternalService
 
-Client -r-> RunService
-RunService -d-> PostgreSQL
-RunService -r-> ExternalService
+Client -r-> RunService: 3.
+RunService -d-> PostgreSQL: 1.
+RunService -r-> ExternalService: 2.
 
 @enduml
