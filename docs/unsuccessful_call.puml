@@ -11,18 +11,18 @@ autoactivate on
 title Example of Unsuccessful Call
 
 actor Client
-participant App
+participant RunService
 participant ExternalService
 database Database
 
-Client -> App: POST /runs?item_count=3
-App -> Database: INSERT INTO run
+Client -> RunService: POST /runs?item_count=3
+RunService -> Database: INSERT INTO run
 return {id: 1}
-App -> ExternalService: POST /item
+RunService -> ExternalService: POST /item
 return 200 OK
-App -> ExternalService: POST /item
+RunService -> ExternalService: POST /item
 return 503 SERVICE UNAVAILABLE
-App -> Database: UPDATE run SET status = "FAILED"
+RunService -> Database: UPDATE run SET status = "FAILED"
 return
 return 200 OK: {id: 1, status: FAILED}
 
