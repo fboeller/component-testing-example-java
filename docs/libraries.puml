@@ -1,0 +1,38 @@
+@startuml
+
+scale 800 width
+skinparam {
+  nodesep 100
+  padding 5
+  monochrome true
+}
+
+component RunService
+
+rectangle "Prod Libraries" {
+    component Dropwizard
+    component Liquibase
+    component Retrofit
+    component JDBI
+}
+
+RunService -u-> Dropwizard
+RunService -u-> Liquibase
+RunService -u-> Retrofit
+RunService -u-> JDBI
+
+rectangle "Test Libraries" {
+    component AssertJ
+    component Mockito
+    component MockServer
+    component Testcontainers
+    component "JUnit 5" as JUnit
+}
+
+RunService -d-> JUnit
+RunService -d-> Testcontainers
+RunService -d-> MockServer
+RunService -d-> Mockito
+RunService -d-> AssertJ
+
+@enduml
