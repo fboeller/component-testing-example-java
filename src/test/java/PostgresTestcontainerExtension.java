@@ -24,6 +24,6 @@ public class PostgresTestcontainerExtension implements BeforeAllCallback, AfterE
 
     @Override
     public void afterEach(ExtensionContext extensionContext) {
-        jdbi.useHandle(handle -> handle.execute("DELETE FROM run"));
+        jdbi.useHandle(handle -> handle.execute("TRUNCATE run"));
     }
 }

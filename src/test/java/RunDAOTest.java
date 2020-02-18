@@ -27,7 +27,7 @@ public class RunDAOTest {
 
     @AfterEach
     public void cleanDatabase() {
-        jdbi.useHandle(handle -> handle.execute("DELETE FROM run"));
+        jdbi.useHandle(handle -> handle.execute("TRUNCATE run"));
     }
 
     @Test
