@@ -13,15 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RunDAOTest {
 
     @Container
-    private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5")
-            .withUsername("postgres")
-            .withPassword("secret");
+    private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5");
 
     private static Jdbi jdbi;
 
     @BeforeAll
     public static void setupDatabase() throws Exception {
-        jdbi = Database.initDatabase(container.getJdbcUrl());
+        jdbi = Database.initDatabase(container.getJdbcUrl(), container.getUsername(), container.getPassword());
     }
 
     @AfterEach

@@ -10,16 +10,16 @@ import java.util.UUID;
 
 public class Database {
 
-    public static Jdbi initDatabase(String jdbcUrl) throws Exception {
-        var dataSource = createPostgresDataSource(jdbcUrl);
+    public static Jdbi initDatabase(String jdbcUrl, String user, String password) throws Exception {
+        var dataSource = createPostgresDataSource(jdbcUrl, user, password);
         migrateDatabase(dataSource);
         return configureJdbi(Jdbi.create(dataSource));
     }
 
-    private static DataSource createPostgresDataSource(String jdbcUrl) {
+    private static DataSource createPostgresDataSource(String jdbcUrl, String user, String password) {
         var dataSource = new PGSimpleDataSource();
-        dataSource.setUser("postgres");
-        dataSource.setPassword("secret");
+        dataSource.setUser(user);
+        dataSource.setPassword(password);
         dataSource.setURL(jdbcUrl);
         return dataSource;
     }

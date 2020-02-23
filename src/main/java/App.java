@@ -19,7 +19,7 @@ public class App extends Application<App.AppConfiguration> {
 
     @Override
     public void run(AppConfiguration configuration, Environment environment) throws Exception {
-        var jdbi = Database.initDatabase(databaseUrl);
+        var jdbi = Database.initDatabase(databaseUrl, "postgres", "secret");
         var retrofit = new Retrofit.Builder()
                 .baseUrl(externalServiceUrl)
                 .build();

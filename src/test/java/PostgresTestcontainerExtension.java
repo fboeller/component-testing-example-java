@@ -14,12 +14,9 @@ public class PostgresTestcontainerExtension implements BeforeAllCallback, AfterE
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        var container = new PostgreSQLContainer<>("postgres:11.5")
-                .withDatabaseName("postgres")
-                .withUsername("postgres")
-                .withPassword("secret");
+        var container = new PostgreSQLContainer<>("postgres:11.5");
         container.start();
-        jdbi = Database.initDatabase(container.getJdbcUrl());
+        jdbi = Database.initDatabase(container.getJdbcUrl(), container.getUsername(), container.getPassword());
     }
 
     @Override
