@@ -14,7 +14,6 @@ public class RunDAOTest {
 
     @Container
     private static PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:11.5")
-            .withDatabaseName("postgres")
             .withUsername("postgres")
             .withPassword("secret");
 
