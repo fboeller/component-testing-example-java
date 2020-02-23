@@ -18,7 +18,6 @@ public class Database {
 
     private static DataSource createPostgresDataSource(String jdbcUrl) {
         var dataSource = new PGSimpleDataSource();
-        dataSource.setDatabaseName("postgres");
         dataSource.setUser("postgres");
         dataSource.setPassword("secret");
         dataSource.setURL(jdbcUrl);
