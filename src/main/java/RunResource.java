@@ -18,14 +18,20 @@ public class RunResource {
 
     @POST
     public Run postRun(@QueryParam("item_count") int itemCount) {
-        var id = jdbi.withExtension(RunDAO.class, RunDAO::createRun);
+        var id = jdbi.withExtension(RunDAO.class,
+                RunDAO::createRun
+        );
         var isSuccess = runService.executeRun(itemCount);
-        return jdbi.withExtension(RunDAO.class, dao -> dao.changeStatus(id, isSuccess ? "SUCCESS" : "FAILED"));
+        return jdbi.withExtension(RunDAO.class, dao ->
+                dao.changeStatus(id, isSuccess ? "SUCCESS" : "FAILED")
+        );
     }
 
     @GET
     public List<Run> getRuns() {
-        return jdbi.withExtension(RunDAO.class, RunDAO::selectRuns);
+        return jdbi.withExtension(RunDAO.class,
+                RunDAO::selectRuns
+        );
     }
 
 }
