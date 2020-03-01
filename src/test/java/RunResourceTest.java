@@ -28,4 +28,19 @@ public class RunResourceTest {
         assertThat(runResource.getRuns())
                 .isEmpty();
     }
+
+    @Test
+    @DisplayName("A posted run has the status 'SUCCESS' under normal conditions")
+    public void t2() {
+        assertThat(runResource.postRun(3))
+                .hasFieldOrPropertyWithValue("status", "SUCCESS");
+    }
+
+    @Test
+    @DisplayName("A posted run is present in the list of all runs")
+    public void t3() {
+        var run = runResource.postRun(3);
+        assertThat(runResource.getRuns())
+                .containsExactly(run);
+    }
 }
