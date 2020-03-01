@@ -59,3 +59,16 @@ This test utilizes `testcontainers` to spawn a docker container with a `PostgreS
 In contrast to the database tests, it uses a globally spawned docker container instead of a dedicated one.
 It uses `Mockito` to mock the business logic of the application.
 It calls the endpoints and verifies that they return the expected responses.
+
+## Setup, Build and Run
+
+Make sure you have `docker`, `docker-compose`, `Maven 3.6.x` and `Java 11` installed.
+Ensure that the docker daemon is running.
+
+2. Run `mvn clean package`
+1. Run `docker-compose up -d` to start the PostgreSQL database and a mock server.
+3. Start the Java application from an IDE or command line.
+4. Run `curl -X POST localhost:4201/runs?item_count=3` to create a run.
+5. Run `curl localhost:4201/runs` to retrieve all runs.
+6. Run `curl -X PUT "localhost:4203/mockserver/retrieve?type=REQUESTS"` to inspect the calls being send to the mock server.
+7. Run `docker-compose down` to shutdown the database and the mock server.
