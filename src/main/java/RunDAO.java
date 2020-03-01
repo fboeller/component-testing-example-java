@@ -12,11 +12,11 @@ public interface RunDAO {
     @GetGeneratedKeys
     UUID createRun();
 
+    @SqlQuery("SELECT * FROM run")
+    List<Run> selectRuns();
+
     @SqlUpdate("UPDATE run SET status=:status WHERE id=:id")
     @GetGeneratedKeys
     Run changeStatus(@Bind("id") UUID runId, @Bind("status") String status);
-
-    @SqlQuery("SELECT * FROM run")
-    List<Run> selectRuns();
 
 }
