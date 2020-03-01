@@ -36,5 +36,13 @@ public class RunResourceTest {
                 .hasFieldOrPropertyWithValue("status", "SUCCESS");
     }
 
+    @Test
+    @DisplayName("A posted run is present in the list of all runs")
+    public void t3() {
+        var run = runResource.postRun(3);
+        assertThat(runResource.getRuns())
+                .containsExactly(run);
+    }
+
 
 }
