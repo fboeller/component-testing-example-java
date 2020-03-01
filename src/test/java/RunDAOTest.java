@@ -31,7 +31,7 @@ public class RunDAOTest {
     @DisplayName("No runs are selected when no runs exist")
     void t1() {
         jdbi.useExtension(RunDAO.class, dao ->
-            assertThat(dao.selectRuns()).isEmpty()
+                assertThat(dao.selectRuns()).isEmpty()
         );
     }
 
