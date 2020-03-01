@@ -27,12 +27,7 @@ public class RunServiceTest {
 
     @BeforeAll
     public static void beforeAll() {
-        var externalServiceUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host(mockServer.getContainerIpAddress())
-                .port(mockServer.getServerPort())
-                .build();
-        var retrofit = new Retrofit.Builder().baseUrl(externalServiceUrl).build();
+        var retrofit = new Retrofit.Builder().baseUrl(mockServer.getEndpoint()).build();
         runService = new RunService(retrofit.create(ExternalService.class));
         mockServerClient = new MockServerClient(mockServer.getContainerIpAddress(), mockServer.getServerPort());
     }
