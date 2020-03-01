@@ -2,7 +2,6 @@ import com.codahale.metrics.health.HealthCheck;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.setup.Environment;
-import okhttp3.HttpUrl;
 import retrofit2.Retrofit;
 
 public class App extends Application<App.AppConfiguration> {
@@ -10,7 +9,7 @@ public class App extends Application<App.AppConfiguration> {
     public static class AppConfiguration extends Configuration {
     }
 
-    private static final HttpUrl externalServiceUrl = HttpUrl.parse("http://localhost:4203");
+    private static final String externalServiceUrl = "http://localhost:4203";
     private static final String databaseUrl = "jdbc:postgresql://localhost:4202/postgres";
 
     public static void main(String[] args) throws Exception {
