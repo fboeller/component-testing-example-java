@@ -6,7 +6,6 @@ import org.mockserver.client.MockServerClient;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import retrofit2.Retrofit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.model.HttpError.error;
@@ -26,8 +25,8 @@ public class RunServiceTest {
 
     @BeforeAll
     public static void beforeAll() {
-        var retrofit = new Retrofit.Builder().baseUrl(mockServer.getEndpoint()).build();
-        runService = new RunService(retrofit.create(ExternalService.class));
+        var externalService = ExternalService.create(mockServer.getEndpoint());
+        runService = new RunService(externalService);
         mockServerClient = new MockServerClient(mockServer.getContainerIpAddress(), mockServer.getServerPort());
     }
 
