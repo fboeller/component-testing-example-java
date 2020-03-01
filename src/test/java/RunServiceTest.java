@@ -1,4 +1,3 @@
-import okhttp3.HttpUrl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -66,7 +65,7 @@ public class RunServiceTest {
     @Test
     @DisplayName("A run fails on a connection error")
     public void t4() {
-        mockServerClient.when(request()).error(error());
+        mockServerClient.when(request()).error(error().withDropConnection(true));
         var isSuccess = runService.executeRun(2);
         assertThat(isSuccess).isFalse();
     }
